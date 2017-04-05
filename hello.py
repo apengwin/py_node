@@ -1,2 +1,2 @@
-import numpy
+#import numpy
 print "VERIFICATION"
