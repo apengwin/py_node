@@ -6,3 +6,6 @@ upload command: `gsutil cp text.txt gs://allanpeng11231994storage`
 
 deply trigger with `gcloud beta functions deploy testName --stage-bucket allanpeng11231994 --trigger-bucket allanpeng11231994storage`
 
+
+
+TO check the output, i use the command `gcloud beta functions logs read --limit 10` and verify that the python code is printed to  log
