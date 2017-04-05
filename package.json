@@ -1,0 +1,14 @@
+{
+  "name": "gcf_gcs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "python-shell":"^0.4.0"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "author": "allan",
+  "license": "ISC"
+}
