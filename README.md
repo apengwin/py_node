@@ -2,10 +2,9 @@ We set up a trigger that attempts to call the included python file when a file i
 
 We're able to get the code in `hello.py` to print to log when we upload `test.txt` to a storage bucket.
 
-upload command: `gsutil cp text.txt gs://allanpeng11231994storage`
+deply trigger with `gcloud beta functions deploy testName --stage-bucket <stage_bucket_name> --trigger-bucket <upload_bucket_name>`
 
-deply trigger with `gcloud beta functions deploy testName --stage-bucket allanpeng11231994 --trigger-bucket allanpeng11231994storage`
-
+upload command: `gsutil cp text.txt gs://<upload_bucket_name>
 
 
 TO check the output, i use the command `gcloud beta functions logs read --limit 10` and verify that the python code is printed to  log
