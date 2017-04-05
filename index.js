@@ -23,6 +23,7 @@ exports.testName = function helloGCS (event, callback) {
             }
             console.log("finished");
         });
+	console.log("hello?");
       }
 
   callback();
