@@ -1,14 +1,32 @@
-We set up a trigger that attempts to call the included python file when a file is uploaded to a bucket.
+<div align="center">
+  <img src="http://www.numpy.org/_static/numpy_logo.png"><br>
+</div>
+
+-----------------
+|  **`Travis CI Status`**   |
+|-------------------|
+[![Travis](https://api.travis-ci.org/numpy/numpy.svg?branch=master)](https://travis-ci.org/numpy/numpy)|
 
 
-Setup instructions based on [this document by Google]: https://cloud.google.com/functions/docs/tutorials/storage
+NumPy is the fundamental package needed for scientific computing with Python.
+This package contains:
 
+   * a powerful N-dimensional array object
+   * sophisticated (broadcasting) functions
+   * tools for integrating C/C++ and Fortran code
+   * useful linear algebra, Fourier transform, and random number capabilities.
 
-We're able to get the code in `hello.py` to print to log when we upload `test.txt` to a storage bucket.
+It derives from the old Numeric code base and can be used as a replacement for Numeric. It also adds the features introduced by numarray and can be used to replace numarray.
 
-deply trigger with `gcloud beta functions deploy testName --stage-bucket <stage_bucket_name> --trigger-bucket <upload_bucket_name>`
+More information can be found at the website:
 
-upload command: `gsutil cp text.txt gs://<upload_bucket_name>
+* http://www.numpy.org
 
+After installation, tests can be run (if ``nose`` is installed) with:
 
-TO check the output, i use the command `gcloud beta functions logs read --limit 10` and verify that the python code is printed to  log
+    python -c 'import numpy; numpy.test()'
+
+The most current development version is always available from our
+git repository:
+
+* http://github.com/numpy/numpy
