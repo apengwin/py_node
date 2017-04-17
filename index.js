@@ -59,7 +59,7 @@ exports.lightweight_tar = function lightweight_tar (event, callback) {
   }
   return file.download(options)
     .then((err) => {
-      console.log(`File %{file.name} downloaded to ${dest].`);
+      console.log(`File %{file.name} downloaded to ${dest}.`);
       var promise = spawn("tar -xvf --no-same-owner " + "/tmp/" + fileName);
       var childProcess = promise.childProcess;
       childProcess.stdout.on('data', function (data) {
@@ -71,9 +71,11 @@ exports.lightweight_tar = function lightweight_tar (event, callback) {
       promise.then(function(result) {
         console.log("promise then");
         console.log(result.stdout.toString());
+        console.log("done");
       }).catch(function(err) {
         console.log("promise error");
         console.err(err.stderr);
+        console.log("done");
       });
   });
 }
