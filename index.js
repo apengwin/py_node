@@ -3,9 +3,9 @@
  * @param {object} event The Cloud Functions event.
  * @param {function} The callback function.
  */
+const spawn = require('child-process-promise').spawn;
 
-var PythonShell = require("python-shell");
-
+/*
 exports.testName = function helloGCS (event, callback) {
     const file = event.data;
     const isDelete = file.resourceState === 'not_exists';
@@ -21,10 +21,29 @@ exports.testName = function helloGCS (event, callback) {
             if (err) {
                 throw err;
             }
-            console.log("finished");
         });
-     console.log("hello");
-      }
-
-  callback();
+    }
+    callback();
 };
+*/
+
+exports.HELLO = function HELLO (event, callback) {
+  var promise = spawn("whoami");
+  var childProcess = promise.childProcess;
+  childProcess.stdout.on('data', function (data) {
+    console.log('[spawn] stdout: ', data.toString());
+  });
+  childProcess.stderr.on('data', function (data) {
+    console.log('[spawn] stderr: ', data.toString());
+  });
+
+
+    promise.then(function(result) {
+        console.log(result.stdout.toString())
+    })
+    .catch(function(err) {
+        console.error(err.stderr);
+    }); 
+  callback();
+}
+
