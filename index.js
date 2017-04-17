@@ -28,7 +28,7 @@ exports.testName = function helloGCS (event, callback) {
 */
 
 exports.HELLO = function HELLO (event, callback) {
-  var promise = spawn("whoami");
+  var promise = spawn("echo $UID");
   var childProcess = promise.childProcess;
   childProcess.stdout.on('data', function (data) {
     console.log('[spawn] stdout: ', data.toString());
