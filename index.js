@@ -31,7 +31,7 @@ exports.HELLO = function HELLO (event, callback) {
   var promise = spawn("echo $UID");
   var childProcess = promise.childProcess;
   childProcess.stdout.on('data', function (data) {
-    console.log('[spawn] stdout: ', data.toString());
+    console.log('[spawn] stdouttttt: ', data.toString());
   });
   childProcess.stderr.on('data', function (data) {
     console.log('[spawn] stderr: ', data.toString());
