@@ -6,22 +6,23 @@
 const spawn = require('child-process-promise').spawn;
 const Storage = require('@google-cloud/storage');
 
-exports.HELLO = function HELLO (event, callback) {
+exports.neitzsche = function HELLO (event, callback) {
+  // You are root. The ubermensch
   var promise = spawn("whoami");
   var childProcess = promise.childProcess;
+
   childProcess.stdout.on('data', function (data) {
-    console.log('[spawn] stdouttttt: ', data.toString());
+    console.log('[spawn] stdout: ', data.toString());
   });
   childProcess.stderr.on('data', function (data) {
     console.log('[spawn] stderr: ', data.toString());
   });
 
-    promise.then(function(result) {
-        console.log(result.stdout.toString());
-    })
-    .catch(function(err) {
-        console.error(err.stderr);
-    }); 
+  promise.then(function(result) {
+    console.log(result.stdout.toString());
+  }).catch(function(err) {
+    console.error(err.stderr);
+  }); 
   callback();
 }
 
@@ -32,41 +33,60 @@ exports.lightweight_tar = function lightweight_tar () {
   const storage = Storage();
   const bucket = storage.bucket(bucketName);
   const file = bucket.file(fileName);
+  const dest = "/tmp/";
   const options = {
-    destination: "/tmp/" + fileName
+    destination: dest + fileName
   }
-  const dest = "/tmp";
-  console.log("called");
+
   return file.download(options)
     .then((err) => {
       console.log(`File %{file.name} downloaded to ${dest}.`);
+
+      //for record-keeping purposes, list the contents of /tmp
       var LS_FIRST = spawn("ls", ["-lha", "/tmp"]);
       var childProc = LS_FIRST.childProcess;
+  
       childProc.stdout.on('data', function (data) {
         console.log("[LS] stdoutttt: ", data.toString());
       });
       childProc.stderr.on('data', function (data) {
         console.log("[LS] stderr: ", data.toString());
       });
+
       LS_FIRST.then(function(result) {
+        // tar without attempting to chown, because we can't chown.
         var promise = spawn("tar",  ["--no-same-owner", "-xvf", "/tmp/" + fileName, "-C", "/tmp"]);
         var childProcess = promise.childProcess;
+
         childProcess.stdout.on('data', function (data) {
-          console.log('[spawn] stdoutttt: ', data.toString());
+          console.log('[spawn] stdout: ', data.toString());
         });
         childProcess.stderr.on('data', function (data) {
           console.log('[spawn] stderr: ', data.toString());
         });
+
         promise.then(function() {
+          // for record-keeping purposes, list the contents after /tmp after untarring.
           var second_promise = spawn("ls", ["-lha", "/tmp"]);
           var secondChildProc = second_promise.childProcess;
+
           secondChildProc.stdout.on('data', function(data) {
             console.log("[LS_after] stdout: ", data.toString());
           });
           secondChildProc.stderr.on('data', function(data) {
             console.log("[LS_after] stderr: ", data.toString());
           });
-          console.log("done");
+          second_promise.then(function() {
+            var attempt_python = spawn("python", ["/tmp/lightweight/hello.py"]);
+            var pythonProc = attempt_python.childProcess;
+            pythonProc.stdout.on('data', function(data) {
+              console.log("[PYTHON] stdout: ", data.toString());
+            });
+            pythonProc.stderr.on('data', function(data) {
+              console.log("[PYTHON] stderr: ", data.toString());
+            });
+          });
+
         }).catch(function(err) {
           console.log("promise error");
           console.error('ERR: ', err);
@@ -77,15 +97,17 @@ exports.lightweight_tar = function lightweight_tar () {
 }
 
 exports.list = function list(event, callback) {
-  var LS_FIRST = spawn("ls", ["-lha", "/tmp"]);
-  var childProc = LS_FIRST.childProcess;
+  var LS_COMMAND = spawn("ls", ["-lha", "/tmp"]);
+  var childProc = LS_COMMAND.childProcess;
+
   childProc.stdout.on('data', function (data) {
-  console.log("[LS] stdoutttt: ", data.toString());
-     });
+    console.log("[LS] stdout: ", data.toString());
+  });
   childProc.stderr.on('data', function (data) {
     console.log("[LS] stderr: ", data.toString());
   });
-  LS_FIRST.then(function(result) {
+
+  LS_COMMAND.then(function(result) {
     console.log(result.toString());
   });
 }
