@@ -1,4 +1,4 @@
-## The code in this repo demonstrates that we can load a conda runtime onto google cloud function, and run code on it.
+## We can load a conda runtime onto google cloud function, and run code on it.
 
 How to reproduce results.
 ### Uploading function
@@ -13,6 +13,8 @@ where `<TRIGGER>` is `--trigger-bucket <STORAGE_BUCKET_NAME>`
 You can view the logs using the command `gcloud beta functions logs read --limit 20` or if you prefer html, on the [GCF console](https://console.cloud.google.com/functions/l)
 
 ## Notes for posterity
+* The runtime 
+
 * GCF requires all functiosn return a promise, or end with a callback. Originally, I had problems of the functions running really slowly, but when I switched from returning promises to callbacks, everything inexplicably ran faster. The lesson here is to never return a promise, which sounds kinda dark when you think about it.
 
 * The function timeout and memory allocated return to default every time you deploy the function, and have to be reset manually.
