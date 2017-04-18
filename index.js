@@ -84,7 +84,7 @@ exports.lightweight_tar = function lightweight_tar () {
           console.log("done");
         }).catch(function(err) {
           console.log("promise error");
-          console.error("error " + err.stderr);
+          console.error("error " + err);
           console.log("done");
         });
     });
