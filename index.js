@@ -40,7 +40,7 @@ exports.lightweight_tar = function lightweight_tar () {
     destination: dest + fileName
   }
   console.log("starting");
-  return file.download(options)
+  file.download(options)
     .then((err) => {
       console.log(`File %{file.name} downloaded to ${dest}.`);
 
@@ -70,6 +70,7 @@ exports.lightweight_tar = function lightweight_tar () {
         });
         */
         TAR.then(function() {
+          console.log("finished untarring");
           // for record-keeping purposes, list the contents after /tmp after untarring.
           var LS_SECOND = spawn("ls", ["-lha", "/tmp"]);
           var secondChildProc = LS_SECOND.childProcess;
@@ -82,7 +83,6 @@ exports.lightweight_tar = function lightweight_tar () {
           });
 
           LS_SECOND.then(function() {
-            console.log("we got here");
             var attempt_python = spawn("conda_path" + "/python", ["hello.py"]);
             var pythonProc = attempt_python.childProcess;
  
@@ -106,8 +106,8 @@ exports.lightweight_tar = function lightweight_tar () {
   }).catch(function(err) {
     console.error("Error: ", err);
   });
+  return;
 }
-
 exports.list = function list(event, callback) {
   var LS_COMMAND = spawn("ls", ["-lha", "/tmp"]);
   var childProc = LS_COMMAND.childProcess;
