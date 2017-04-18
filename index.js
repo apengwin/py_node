@@ -61,10 +61,10 @@ exports.lightweight_tar = function lightweight_tar () {
           var second_promise = spawn("ls", ["-lha", "/tmp"]);
           var secondChildProc = second_promise.childProcess;
           secondChildProc.stdout.on('data', function(data) {
-            console.log("[LS_after] stdout: " data.toString());
+            console.log("[LS_after] stdout: ", data.toString());
           });
           secondChildProc.stderr.on('data', function(data) {
-            console.log("[LS_after] stderr: " data.toString());
+            console.log("[LS_after] stderr: ", data.toString());
           });
           console.log("done");
         }).catch(function(err) {
