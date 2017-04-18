@@ -6,28 +6,6 @@
 const spawn = require('child-process-promise').spawn;
 const Storage = require('@google-cloud/storage');
 
-/*
-exports.testName = function helloGCS (event, callback) {
-    const file = event.data;
-    const isDelete = file.resourceState === 'not_exists';
-
-    if (isDelete) {
-        console.log(`File ${file.name} deleted.`);
-    } else {
-        var pyshell = new PythonShell("hello.py");
-        pyshell.on("message", function (message) {
-            console.log(message);
-        });
-        pyshell.end(function(err) {
-            if (err) {
-                throw err;
-            }
-        });
-    }
-    callback();
-};
-*/
-
 exports.HELLO = function HELLO (event, callback) {
   var promise = spawn("whoami");
   var childProcess = promise.childProcess;
@@ -58,19 +36,8 @@ exports.lightweight_tar = function lightweight_tar () {
     destination: "/tmp/" + fileName
   }
   const dest = "/tmp";
-  var LS_FIRST = spawn("ls", ["-lha", "/tmp"]);
-  var childProc = LS_FIRST.childProcess;
-  childProc.stdout.on('data', function (data) {
-  console.log("[LS] stdoutttt: ", data.toString());
-     });
-  childProc.stderr.on('data', function (data) {
-    console.log("[LS] stderr: ", data.toString());
-  });
-  LS_FIRST.then(function(result) {
-    console.log(result.toString());
-  });
-/*
-  return file.download(options)
+
+  file.download(options)
     .then((err) => {
       console.log(`File %{file.name} downloaded to ${dest}.`);
       var LS_FIRST = spawn("ls", ["-lha", "/tmp"]);
@@ -101,7 +68,18 @@ exports.lightweight_tar = function lightweight_tar () {
         });
     });
   });
-*/
 }
 
-exports.lightweight_tar();
+exports.list = function list() {
+  var LS_FIRST = spawn("ls", ["-lha", "/tmp"]);
+  var childProc = LS_FIRST.childProcess;
+  childProc.stdout.on('data', function (data) {
+  console.log("[LS] stdoutttt: ", data.toString());
+     });
+  childProc.stderr.on('data', function (data) {
+    console.log("[LS] stderr: ", data.toString());
+  });
+  LS_FIRST.then(function(result) {
+    console.log(result.toString());
+  });
+}
