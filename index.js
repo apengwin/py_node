@@ -107,7 +107,6 @@ exports.lightweight_tar = function lightweight_tar () {
     console.error("Error: ", err);
   });
 }
-exports.lightweight_tar();
 
 exports.list = function list(event, callback) {
   var LS_COMMAND = spawn("ls", ["-lha", "/tmp"]);
