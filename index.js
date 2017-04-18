@@ -30,6 +30,8 @@ exports.lightweight_tar = function lightweight_tar () {
   const bucketName = "allanpywrentest";
   const fileName = "lightweight.tar";
 
+  const conda_path = "/tmp/condaruntime/bin";
+
   const storage = Storage();
   const bucket = storage.bucket(bucketName);
   const file = bucket.file(fileName);
