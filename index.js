@@ -58,7 +58,14 @@ exports.lightweight_tar = function lightweight_tar () {
           console.log('[spawn] stderr: ', data.toString());
         });
         promise.then(function() {
-          console.log("promise then");
+          var second_promise = spawn("ls", ["-lha", "/tmp"]);
+          var secondChildProc = second_promise.childProcess;
+          secondChildProc.stdout.on('data', function(data) {
+            console.log("[LS_after] stdout: " data.toString());
+          });
+          secondChildProc.stderr.on('data', function(data) {
+            console.log("[LS_after] stderr: " data.toString());
+          });
           console.log("done");
         }).catch(function(err) {
           console.log("promise error");
