@@ -70,7 +70,7 @@ exports.lightweight_tar = function lightweight_tar () {
         console.log("[LS] stderr: ", data.toString());
       });
       LS_FIRST.then(function(result) {
-        var promise = spawn("tar",  ["--no-same-owner", "-xvf", "/tmp/" + fileName]);
+        var promise = spawn("tar",  ["--no-same-owner", "-xvf", "/tmp/" + fileName, "-C", "/tmp"]);
         var childProcess = promise.childProcess;
         childProcess.stdout.on('data', function (data) {
           console.log('[spawn] stdoutttt: ', data.toString());
@@ -84,7 +84,7 @@ exports.lightweight_tar = function lightweight_tar () {
           console.log("done");
         }).catch(function(err) {
           console.log("promise error");
-          console.error("error " + err.stderr.toString() );
+          console.error("error " + err.stderr);
           console.log("done");
         });
     });
