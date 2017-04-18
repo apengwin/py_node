@@ -15,7 +15,7 @@ You can view the logs using the command `gcloud beta functions logs read --limit
 ## Notes for posterity
 * The runtime 
 
-* GCF requires all functiosn return a promise, or end with a callback. Originally, I had problems of the functions running really slowly, but when I switched from returning promises to callbacks, everything inexplicably ran faster. The lesson here is to never return a promise, which sounds kinda dark when you think about it.
+* GCF requires all functiosn return a promise, or end with a callback. Originally, I had problems of the functions running really slowly, but when I switched from returning promises to callbacks, everything inexplicably ran faster, from 10s of minutes to a few seconds. The lesson here is to never return a promise, which sounds kinda dark when you think about it.
 
 * The function timeout and memory allocated return to default every time you deploy the function, and have to be reset manually.
 
