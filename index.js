@@ -61,7 +61,7 @@ exports.lightweight_tar = function lightweight_tar (event, callback) {
         var TAR = spawn("tar",  ["--no-same-owner", "-xzf", "/tmp/" + fileName, "-C", "/tmp"]);
         var childProcess = TAR.childProcess;
         console.log("Attempting to untar...");
-       /* uncommenting this is a bad idea. IPC is slow as fuck.
+        /* uncommenting this is a bad idea. IPC is super slow.
         childProcess.stdout.on('data', function (data) {
           console.log('[TAR] stdout: ', data.toString());
         });
@@ -72,7 +72,7 @@ exports.lightweight_tar = function lightweight_tar (event, callback) {
         TAR.then(function() {
           console.log("finished untarring");
           // for record-keeping purposes, list the contents after /tmp after untarring.
-          var LS_SECOND = spawn("ls", ["-lha", "/tmp"]);
+          var LS_SECOND = spawn("ls", ["-lha", conda_path]);
           var secondChildProc = LS_SECOND.childProcess;
 
           secondChildProc.stdout.on('data', function(data) {
@@ -83,7 +83,7 @@ exports.lightweight_tar = function lightweight_tar (event, callback) {
           });
 
           LS_SECOND.then(function() {
-            var attempt_python = spawn("conda_path" + "/python", ["hello.py"]);
+            var attempt_python = spawn(conda_path + "/python", ["hello.py"]);
             var pythonProc = attempt_python.childProcess;
  
             pythonProc.stdout.on('data', function(data) {
