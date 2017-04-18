@@ -39,7 +39,7 @@ exports.lightweight_tar = function lightweight_tar () {
   const options = {
     destination: dest + fileName
   }
-
+  console.log("starting");
   return file.download(options)
     .then((err) => {
       console.log(`File %{file.name} downloaded to ${dest}.`);
