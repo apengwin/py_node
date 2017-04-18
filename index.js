@@ -26,7 +26,7 @@ exports.neitzsche = function HELLO (event, callback) {
   callback();
 }
 
-exports.lightweight_tar = function lightweight_tar () {
+exports.lightweight_tar = function lightweight_tar (event, callback) {
   const bucketName = "allanpywrentest";
   const fileName = "condaruntime.tar.xz";
 
@@ -96,17 +96,18 @@ exports.lightweight_tar = function lightweight_tar () {
             attempt_python.catch(function(err) {
               console.error("Python err: ", err);
             });
-
+            callback();
           });
 
         }).catch(function(err) {
           console.error('ERR: ', err);
+          callback(1);
         });
  //   });
   }).catch(function(err) {
     console.error("Error: ", err);
+    callback(1);
   });
-  return;
 }
 exports.list = function list(event, callback) {
   var LS_COMMAND = spawn("ls", ["-lha", "/tmp"]);
