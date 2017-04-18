@@ -60,7 +60,7 @@ exports.lightweight_tar = function lightweight_tar () {
         // tar without attempting to chown, because we can't chown.
         var TAR = spawn("tar",  ["--no-same-owner", "-xzf", "/tmp/" + fileName, "-C", "/tmp"]);
         var childProcess = TAR.childProcess;
-
+        console.log("Attempting to untar...");
        /* uncommenting this is a bad idea. IPC is slow as fuck.
         childProcess.stdout.on('data', function (data) {
           console.log('[TAR] stdout: ', data.toString());
@@ -80,9 +80,10 @@ exports.lightweight_tar = function lightweight_tar () {
           secondChildProc.stderr.on('data', function(data) {
             console.log("[LS_after] stderr: ", data.toString());
           });
+
           LS_SECOND.then(function() {
             console.log("we got here");
-            var attempt_python = spawn("conda_path" + "/python", ["/tmp/lightweight/hello.py"]);
+            var attempt_python = spawn("conda_path" + "/python", ["hello.py"]);
             var pythonProc = attempt_python.childProcess;
  
             pythonProc.stdout.on('data', function(data) {
@@ -102,6 +103,8 @@ exports.lightweight_tar = function lightweight_tar () {
           console.error('ERR: ', err);
         });
  //   });
+  }).catch(function(err) {
+    console.error("Error: ", err);
   });
 }
 exports.lightweight_tar();
