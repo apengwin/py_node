@@ -36,8 +36,8 @@ exports.lightweight_tar = function lightweight_tar () {
     destination: "/tmp/" + fileName
   }
   const dest = "/tmp";
-
-  file.download(options)
+  console.log("called");
+  return file.download(options)
     .then((err) => {
       console.log(`File %{file.name} downloaded to ${dest}.`);
       var LS_FIRST = spawn("ls", ["-lha", "/tmp"]);
@@ -70,7 +70,7 @@ exports.lightweight_tar = function lightweight_tar () {
   });
 }
 
-exports.list = function list() {
+exports.list = function list(event, callback) {
   var LS_FIRST = spawn("ls", ["-lha", "/tmp"]);
   var childProc = LS_FIRST.childProcess;
   childProc.stdout.on('data', function (data) {
