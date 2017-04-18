@@ -47,7 +47,7 @@ exports.HELLO = function HELLO (event, callback) {
   callback();
 }
 
-exports.lightweight_tar = function lightweight_tar (event, callback) {
+exports.lightweight_tar = function lightweight_tar () {
   const bucketName = "allanpywrentest";
   const fileName = "lightweight.tar";
 
@@ -61,23 +61,34 @@ exports.lightweight_tar = function lightweight_tar (event, callback) {
   return file.download(options)
     .then((err) => {
       console.log(`File %{file.name} downloaded to ${dest}.`);
-      var promise = spawn("tar -xvf --no-same-owner " + "/tmp/" + fileName);
-      var childProcess = promise.childProcess;
-      childProcess.stdout.on('data', function (data) {
-        console.log('[spawn] stdoutttt: ', data.toString());
+      var LS_FIRST = spawn("ls", ["-lha", "/tmp"]);
+      var childProc = LS_FIRST.childProcess;
+      childProc.stdout.on('data', function (data) {
+        console.log("[LS] stdoutttt: ", data.toString());
       });
-      childProcess.stderr.on('data', function (data) {
-        console.log('[spawn] stderr: ', data.toString());
+      childProc.stderr.on('data', function (data) {
+        console.log("[LS] stderr: ", data.toString());
       });
-      promise.then(function(result) {
-        console.log("promise then");
-        console.log(result.stdout.toString());
-        console.log("done");
-      }).catch(function(err) {
-        console.log("promise error");
-        console.error(err.stderr);
-        console.log("done");
-      });
+      LS_FIRST.then(function(result) {
+        var promise = spawn("tar",  ["--no-same-owner", "-xvf", "/tmp/" + fileName]);
+        var childProcess = promise.childProcess;
+        childProcess.stdout.on('data', function (data) {
+          console.log('[spawn] stdoutttt: ', data.toString());
+        });
+        childProcess.stderr.on('data', function (data) {
+          console.log('[spawn] stderr: ', data.toString());
+        });
+        promise.then(function(result) {
+          console.log("promise then");
+          console.log(result.stdout.toString());
+          console.log("done");
+        }).catch(function(err) {
+          console.log("promise error");
+          console.error("error " + err.stderr.toString() );
+          console.log("done");
+        });
+    });
   });
 }
 
+exports.lightweight_tar();
