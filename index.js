@@ -28,7 +28,7 @@ exports.neitzsche = function HELLO (event, callback) {
 
 exports.lightweight_tar = function lightweight_tar () {
   const bucketName = "allanpywrentest";
-  const fileName = "lightweight.tar";
+  const fileName = "condaruntime.tar.xz";
 
   const conda_path = "/tmp/condaruntime/bin";
 
@@ -49,7 +49,7 @@ exports.lightweight_tar = function lightweight_tar () {
       var childProc = LS_FIRST.childProcess;
   
       childProc.stdout.on('data', function (data) {
-        console.log("[LS] stdoutttt: ", data.toString());
+        console.log("[LS] stdout: ", data.toString());
       });
       childProc.stderr.on('data', function (data) {
         console.log("[LS] stderr: ", data.toString());
@@ -57,20 +57,20 @@ exports.lightweight_tar = function lightweight_tar () {
 
       LS_FIRST.then(function(result) {
         // tar without attempting to chown, because we can't chown.
-        var promise = spawn("tar",  ["--no-same-owner", "-xvf", "/tmp/" + fileName, "-C", "/tmp"]);
-        var childProcess = promise.childProcess;
+        var TAR = spawn("tar",  ["--no-same-owner", "-xvf", "/tmp/" + fileName, "-C", "/tmp"]);
+        var childProcess = TAR.childProcess;
 
         childProcess.stdout.on('data', function (data) {
-          console.log('[spawn] stdout: ', data.toString());
+          console.log('[TAR] stdout: ', data.toString());
         });
         childProcess.stderr.on('data', function (data) {
-          console.log('[spawn] stderr: ', data.toString());
+          console.log('[TAR] stderr: ', data.toString());
         });
 
-        promise.then(function() {
+        TAR.then(function() {
           // for record-keeping purposes, list the contents after /tmp after untarring.
-          var second_promise = spawn("ls", ["-lha", "/tmp"]);
-          var secondChildProc = second_promise.childProcess;
+          var LS_SECOND = spawn("ls", ["-lha", "/tmp"]);
+          var secondChildProc = LS_SECOND.childProcess;
 
           secondChildProc.stdout.on('data', function(data) {
             console.log("[LS_after] stdout: ", data.toString());
@@ -79,7 +79,7 @@ exports.lightweight_tar = function lightweight_tar () {
             console.log("[LS_after] stderr: ", data.toString());
           });
           second_promise.then(function() {
-            var attempt_python = spawn("python", ["/tmp/lightweight/hello.py"]);
+            var attempt_python = spawn("conda_path" + "/python", ["/tmp/lightweight/hello.py"]);
             var pythonProc = attempt_python.childProcess;
             pythonProc.stdout.on('data', function(data) {
               console.log("[PYTHON] stdout: ", data.toString());
