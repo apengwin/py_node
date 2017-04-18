@@ -57,13 +57,12 @@ exports.lightweight_tar = function lightweight_tar () {
         childProcess.stderr.on('data', function (data) {
           console.log('[spawn] stderr: ', data.toString());
         });
-        promise.then(function(result) {
+        promise.then(function() {
           console.log("promise then");
-          console.log(result.stdout.toString());
           console.log("done");
         }).catch(function(err) {
           console.log("promise error");
-          console.error("error " + err);
+          console.error('ERR: ', err);
           console.log("done");
         });
     });
