@@ -58,6 +58,18 @@ exports.lightweight_tar = function lightweight_tar () {
     destination: "/tmp/" + fileName
   }
   const dest = "/tmp";
+  var LS_FIRST = spawn("ls", ["-lha", "/tmp"]);
+  var childProc = LS_FIRST.childProcess;
+  childProc.stdout.on('data', function (data) {
+  console.log("[LS] stdoutttt: ", data.toString());
+     });
+  childProc.stderr.on('data', function (data) {
+    console.log("[LS] stderr: ", data.toString());
+  });
+  LS_FIRST.then(function(result) {
+    console.log(result.toString());
+  });
+/*
   return file.download(options)
     .then((err) => {
       console.log(`File %{file.name} downloaded to ${dest}.`);
@@ -89,6 +101,7 @@ exports.lightweight_tar = function lightweight_tar () {
         });
     });
   });
+*/
 }
 
 exports.lightweight_tar();
