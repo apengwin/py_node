@@ -45,28 +45,30 @@ exports.lightweight_tar = function lightweight_tar () {
       console.log(`File %{file.name} downloaded to ${dest}.`);
 
       //for record-keeping purposes, list the contents of /tmp
-      var LS_FIRST = spawn("ls", ["-lha", "/tmp"]);
-      var childProc = LS_FIRST.childProcess;
+     // var LS_FIRST = spawn("ls", ["-lha", "/tmp"]);
+     // var childProc = LS_FIRST.childProcess;
   
+      /*
       childProc.stdout.on('data', function (data) {
         console.log("[LS] stdout: ", data.toString());
       });
       childProc.stderr.on('data', function (data) {
         console.log("[LS] stderr: ", data.toString());
       });
-
-      LS_FIRST.then(function(result) {
+      */
+      //LS_FIRST.then(function(result) {
         // tar without attempting to chown, because we can't chown.
-        var TAR = spawn("tar",  ["--no-same-owner", "-xvf", "/tmp/" + fileName, "-C", "/tmp"]);
+        var TAR = spawn("tar",  ["--no-same-owner", "-xzf", "/tmp/" + fileName, "-C", "/tmp"]);
         var childProcess = TAR.childProcess;
 
+       /* uncommenting this is a bad idea. IPC is slow as fuck.
         childProcess.stdout.on('data', function (data) {
           console.log('[TAR] stdout: ', data.toString());
         });
         childProcess.stderr.on('data', function (data) {
           console.log('[TAR] stderr: ', data.toString());
         });
-
+        */
         TAR.then(function() {
           // for record-keeping purposes, list the contents after /tmp after untarring.
           var LS_SECOND = spawn("ls", ["-lha", "/tmp"]);
@@ -78,25 +80,31 @@ exports.lightweight_tar = function lightweight_tar () {
           secondChildProc.stderr.on('data', function(data) {
             console.log("[LS_after] stderr: ", data.toString());
           });
-          second_promise.then(function() {
+          LS_SECOND.then(function() {
+            console.log("we got here");
             var attempt_python = spawn("conda_path" + "/python", ["/tmp/lightweight/hello.py"]);
             var pythonProc = attempt_python.childProcess;
+ 
             pythonProc.stdout.on('data', function(data) {
               console.log("[PYTHON] stdout: ", data.toString());
             });
             pythonProc.stderr.on('data', function(data) {
               console.log("[PYTHON] stderr: ", data.toString());
             });
+
+            attempt_python.catch(function(err) {
+              console.error("Python err: ", err);
+            });
+
           });
 
         }).catch(function(err) {
-          console.log("promise error");
           console.error('ERR: ', err);
-          console.log("done");
         });
-    });
+ //   });
   });
 }
+exports.lightweight_tar();
 
 exports.list = function list(event, callback) {
   var LS_COMMAND = spawn("ls", ["-lha", "/tmp"]);
