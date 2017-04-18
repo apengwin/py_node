@@ -18,3 +18,5 @@ You can view the logs using the command `gcloud beta functions logs read --limit
 * The function timeout and memory allocated return to default every time you deploy the function, and have to be reset manually.
 
 * The overhead of IPC between the child process and the parent printing out the child's logs is pretty significant, so it's probably a bad idea to print out the output of a `tar -xcf`. Plus it spams the logs.
+
+* GCF lets you run as root.
