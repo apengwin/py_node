@@ -5,18 +5,21 @@
  */
 const spawn = require('child-process-promise').spawn;
 const Storage = require('@google-cloud/storage');
+const pythonOutputFile = "/tmp/output.pickle";
+const outputBucket = "pywrentestoutput";
+const conda_path = "/tmp/condaruntime/bin";
+const dest = "/tmp/";
+const condaFileName = "condaruntime.tar.xz";
 
 exports.lightweight_tar = function lightweight_tar (event, callback) {
   const bucketName = "allanpywrentest";
-  const fileName = "condaruntime.tar.xz";
 
-  const conda_path = "/tmp/condaruntime/bin";
   const storage = Storage();
   const bucket = storage.bucket(bucketName);
-  const file = bucket.file(fileName);
+  const file = bucket.file(condaFileName);
   const dest = "/tmp/";
   const options = {
-    destination: dest + fileName
+    destination: dest + condaFileName 
   }
   console.log("starting");
   file.download(options)
@@ -24,7 +27,7 @@ exports.lightweight_tar = function lightweight_tar (event, callback) {
       console.log(`File %{file.name} downloaded to ${dest}.`);
 
       // tar without attempting to chown, because we can't chown.
-      var TAR = spawn("tar",  ["--no-same-owner", "-xzf", "/tmp/" + fileName, "-C", "/tmp"]);
+      var TAR = spawn("tar",  ["--no-same-owner", "-xzf", dest  + condaFileName, "-C", "/tmp"]);
       var childProcess = TAR.childProcess;
       console.log("Attempting to untar...");
 
@@ -61,11 +64,20 @@ exports.lightweight_tar = function lightweight_tar (event, callback) {
            pythonProc.stderr.on('data', function(data) {
              console.log("[PYTHON] stderr: ", data.toString());
            });
-
-           attempt_python.catch(function(err) {
+           attempt_python.then(function() {
+             output = Storage().bucket(outputBucket);
+             output.upload(pythonOutputFile, function(err, file, apiResponse) {
+               if (err) {
+                 console.error(err);
+               } else {
+                 console.log("success");
+               }
+               callback();
+             });
+           }).catch(function(err) {
              console.error("Python err: ", err);
+             callback(1);
            });
-           callback();
          });
 
        }).catch(function(err) {
@@ -117,4 +129,40 @@ exports.list = function list(event, callback) {
   LS_COMMAND.then(function(result) {
     console.log(result.toString());
   });
+  callback();
 }
+
+exports.test_data = function test(event, callback) {
+  if (event.data.resourceState == "exists") {
+    var buckt = Storage().bucket("allanpeng11231994storage");
+    console.log(event.resource);
+    var fil = buckt.file("test3.txt");
+    const options = {
+      destination: "/tmp/" + "test3.txt"
+    }
+    fil.download(options)
+      .then(function(data) {
+        console.log("here");
+        
+        var pyt = spawn("python",  ["helper.py", "/tmp/" + event.data.name. pythonOutputFile]);
+        var childProcess = pyt.childProcess;
+        
+         childProcess.stdout.on('data', function (data) {
+           console.log('[PYT] stdout: ', data.toString());
+         });
+         childProcess.stderr.on('data', function (data) {
+           console.log('[PYT] stderr: ', data.toString());
+         });
+         pyt.then(function(){
+          Storage().bucket(outputBucket).upload(pythonOutputFile)
+           .then (function() {
+              callback();
+           });
+         });
+      });
+  } else {
+    console.log("Problem with file upload");
+    callback();
+  }
+};
+

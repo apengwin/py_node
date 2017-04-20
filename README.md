@@ -13,7 +13,7 @@ where `<TRIGGER>` is `--trigger-bucket <STORAGE_BUCKET_NAME>`
 You can view the logs using the command `gcloud beta functions logs read --limit 20` or if you prefer html, on the [GCF console](https://console.cloud.google.com/functions/l)
 
 ## Notes for posterity
-* The runtime 
+* AWS Lambda sometimes reuses function instances to avoid cold start issues, so the runtime is somethimes cached in `/tmp`. To my knowledge, this doesn't happen in GCF.
 
 * GCF requires all functiosn return a promise, or end with a callback. Originally, I had problems of the functions running really slowly, but when I switched from returning promises to callbacks, everything inexplicably ran faster, from 10s of minutes to a few seconds. The lesson here is to never return a promise, which sounds kinda dark when you think about it.
 
