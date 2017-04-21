@@ -9,7 +9,6 @@ const Storage = require('@google-cloud/storage');
 exports.lightweight_tar = function lightweight_tar (event, callback) {
   const bucketName = "allanpywrentest";
   const fileName = "condaruntime.tar.xz";
-
   const conda_path = "/tmp/condaruntime/bin";
   const storage = Storage();
   const bucket = storage.bucket(bucketName);
@@ -28,51 +27,26 @@ exports.lightweight_tar = function lightweight_tar (event, callback) {
       var childProcess = TAR.childProcess;
       console.log("Attempting to untar...");
 
-       /* uncommenting this is a bad idea. IPC slows down everything.
-       childProcess.stdout.on('data', function (data) {
-         console.log('[TAR] stdout: ', data.toString());
-       });
-       childProcess.stderr.on('data', function (data) {
-         console.log('[TAR] stderr: ', data.toString());
-       });
-       */
+      TAR.then(function() {
+        console.log("finished untarring");
+        var attempt_python = spawn(conda_path + "/python", ["helper.py"]);
+        var pythonProc = attempt_python.childProcess;
 
-       TAR.then(function() {
-         console.log("finished untarring");
+        pythonProc.stdout.on('data', function(data) {
+          console.log("[PYTHON] stdout: ", data.toString());
+        });
+        pythonProc.stderr.on('data', function(data) {
+          console.log("[PYTHON] stderr: ", data.toString());
+        });
 
-         // for record-keeping purposes, list the contents after /tmp after untarring.
-         var LS_SECOND = spawn("ls", ["-lha", conda_path]);
-         var secondChildProc = LS_SECOND.childProcess;
-
-         secondChildProc.stdout.on('data', function(data) {
-           console.log("[LS_after] stdout: ", data.toString());
-         });
-         secondChildProc.stderr.on('data', function(data) {
-           console.log("[LS_after] stderr: ", data.toString());
-         });
-
-         LS_SECOND.then(function() {
-           var attempt_python = spawn(conda_path + "/python", ["helper.py"]);
-           var pythonProc = attempt_python.childProcess;
-
-           pythonProc.stdout.on('data', function(data) {
-              console.log("[PYTHON] stdout: ", data.toString());
-           });
-           pythonProc.stderr.on('data', function(data) {
-             console.log("[PYTHON] stderr: ", data.toString());
-           });
-
-           attempt_python.catch(function(err) {
-             console.error("Python err: ", err);
-           });
-           callback();
-         });
-
+        attempt_python.catch(function(err) {
+          console.error("Python err: ", err);
+        });
+          callback();
        }).catch(function(err) {
          console.error('ERR: ', err);
          callback(1);
        });
- //   });
   }).catch(function(err) {
     console.error("Error: ", err);
     callback(1);
