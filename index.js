@@ -52,7 +52,7 @@ exports.lightweight_tar = function lightweight_tar (event, callback) {
          });
 
          LS_SECOND.then(function() {
-           var attempt_python = spawn(conda_path + "/python", ["compute.py"]);
+           var attempt_python = spawn(conda_path + "/python", ["helper.py"]);
            var pythonProc = attempt_python.childProcess;
 
            pythonProc.stdout.on('data', function(data) {
