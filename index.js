@@ -6,7 +6,10 @@
 const spawn = require('child-process-promise').spawn;
 const Storage = require('@google-cloud/storage');
 
-exports.lightweight_tar = function lightweight_tar (req, res) {
+exports.wrenhandler = function wrenhandler (req, res) {
+
+  response = {"Exception": null};
+
   const bucketName = "allanpywrentest";
   const runtimeName = "condaruntime.tar.xz";
   const conda_path = "/tmp/condaruntime/bin";
@@ -22,6 +25,7 @@ exports.lightweight_tar = function lightweight_tar (req, res) {
   options = {
     destination: dest + fileName
   }
+  response["start_time"] = new Date().getTime()/1000;
   console.log("starting");
   runtime.download(options)
     .then((err) => {
