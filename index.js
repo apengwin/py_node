@@ -36,7 +36,7 @@ exports.wrenhandler = function wrenhandler (req, res) {
       var childProcess = TAR.childProcess;
       console.log("Attempting to untar...");
 
-      TAR.then(function() {
+      TAR.then((err) => {
         console.log("finished untarring");
    
         const func_bucket = storage.bucket(req.body.func_key[0]);
@@ -65,11 +65,18 @@ exports.wrenhandler = function wrenhandler (req, res) {
                attempt_python.catch(function(err) {
                  console.error("Python err: ", err);
                });
-               res.send("ok"); 
+               const output_bucket = storage.bucket(req.body.output_key[0]);
+               output_bucket.upload(output_file, {dest: output_key[1]})
+                 .then((err) => {
+                   res.send("ok");
+                 }).catch((err) => {
+                      console.error('Err: ', err);
+                      res.send("fail");
+                 });
                }).catch(function(err) {
                  console.error('error downloading data: ', err);
                  res.send("fail");
-             });
+               });
            }).catch(function(err) {
              console.error('ERR: ', err);
              res.send("fail");
@@ -77,7 +84,7 @@ exports.wrenhandler = function wrenhandler (req, res) {
         }).catch(function(err) {
           console.error("Error: ", err);
           res.send("fail");
-      });
+        });
    }).catch(function(err) {
      console.error("error downloading runtime");
      res.send("fail");
