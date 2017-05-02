@@ -22,3 +22,7 @@ You can view the logs using the command `gcloud beta functions logs read --limit
 * The overhead of IPC between the child process and the parent printing out the child's logs is pretty significant, so it's probably a bad idea to print out the output of a `tar -xcf`. Plus it spams the logs.
 
 * GCF lets you run as root.
+
+* The container runs Debian.
+
+* MAKE SURE THERE ARE NO CONFLICTING CREDENTIALS IN `~/.boto `, OTHERWISE AUTH WILL FAIL AND YOU WILL SPEND AN HOUR TRYING TO FIGURE OUT WHY YOUR CREDENTIALS SUDDENLY DONT WORK ANYMORE. [DONT BE STUPID LIKE ME.](http://stackoverflow.com/a/42798239/3780557)
